@@ -1,0 +1,25 @@
+{
+  "name": "NODE-API-COURSE",
+  "version": "1.0.0",
+  "description": "NODE-API-COURSE",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satsnik/NODE-API-COURSE.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/satsnik/NODE-API-COURSE/issues"
+  },
+  "homepage": "https://github.com/satsnik/NODE-API-COURSE#readme",
+  "dependencies": {
+    "debug": "^4.0.1",
+    "express": "^4.16.3",
+    "http": "0.0.0"
+  }
+}
