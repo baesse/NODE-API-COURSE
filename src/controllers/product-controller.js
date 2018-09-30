@@ -1,7 +1,16 @@
 const mongoose = require("mongoose");
 const Product = mongoose.model("Product");
-
+const ValidationContract =require('../validators/validator')
 exports.post = (req, res, next) => {
+  let contract = new ValidationContract();
+   contract.hasMinLen(req.body.title,3,'o Titulo deve conter pelo menos 3 carecteres')
+
+   if(!contract.isValid()){
+    res
+    .status(400)
+    .send(contract.errors()).end();
+    return
+   }
   var product = new Product(req.body);
   product
     .save()
