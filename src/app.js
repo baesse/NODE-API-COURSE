@@ -9,13 +9,17 @@ mongoose.connect('mongodb://igorbaesse:root123@ds030817.mlab.com:30817/node_stor
 
 //carregar models
 const Product = require('./models/product')
+const Customer = require('./models/customer')
+const Order = require('./models/Order')
 //carregar rotas
 const indexRoute = require('./routes/index')
 const productRoute = require('./routes/product')
+const costumerRoute = require('./routes/customer-route')
 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/", indexRoute);
 app.use("/products", productRoute);
+app.use("/custumer", costumerRoute);
 module.exports = app;
