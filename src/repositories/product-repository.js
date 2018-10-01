@@ -11,9 +11,10 @@ exports.get = async() => {
   return data
 };
 
-exports.post = body => {
+exports.post = async(body) => {
   var product = new Product(body);
-  return product.save();
+  var data = await product.save();
+  return data
 };
 
 exports.getBySlug = async(slug) => {

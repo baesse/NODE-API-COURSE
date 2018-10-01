@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Product = mongoose.model("Product");
 const ValidationContract = require("../validators/validator");
 const repository = require("../repositories/product-repository");
-exports.post = (req, res, next) => {
+exports.post = async(req, res, next) => {
   let contract = new ValidationContract();
   contract.hasMinLen(
     req.body.title,
@@ -18,16 +18,15 @@ exports.post = (req, res, next) => {
     return;
   }
 
-  repository
-    .post(req.body)
-    .then(x => {
-      res.status(201).send({ message: "Produto cadastrado com sucesso" });
-    })
-    .catch(e => {
-      res
-        .status(400)
-        .send({ message: "Falha ao cadastrar o produto", data: e });
-    });
+  try{
+    var data = await repository
+    .post(req.body)   
+    res.status(201).send({ message: "Produto cadastrado com sucesso" });  
+  }catch(e){
+    res
+    .status(400)
+    .send({ message: "Falha ao cadastrar o produto", data: e });
+  }
 };
 
 exports.get = async (req, res, next) => {
