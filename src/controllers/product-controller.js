@@ -1,19 +1,25 @@
 const mongoose = require("mongoose");
 const Product = mongoose.model("Product");
-const ValidationContract =require('../validators/validator')
+const ValidationContract = require("../validators/validator");
+const repository = require("../repositories/product-repository");
 exports.post = (req, res, next) => {
   let contract = new ValidationContract();
-   contract.hasMinLen(req.body.title,3,'o Titulo deve conter pelo menos 3 carecteres')
+  contract.hasMinLen(
+    req.body.title,
+    3,
+    "o Titulo deve conter pelo menos 3 carecteres"
+  );
 
-   if(!contract.isValid()){
+  if (!contract.isValid()) {
     res
-    .status(400)
-    .send(contract.errors()).end();
-    return
-   }
-  var product = new Product(req.body);
-  product
-    .save()
+      .status(400)
+      .send(contract.errors())
+      .end();
+    return;
+  }
+
+  repository
+    .post(req.body)
     .then(x => {
       res.status(201).send({ message: "Produto cadastrado com sucesso" });
     })
@@ -24,74 +30,56 @@ exports.post = (req, res, next) => {
     });
 };
 
-exports.get = (req, res, next) => {
-  Product.find({ active: true }, "title price slug")
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
+exports.get = async (req, res, next) => {
+  try {
+    var data = await repository.get();
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 };
 
-exports.getBySlug = (req, res, next) => {
-  Product.findOne(
-    { active: true, slug: req.params.slug },
-    "title description price slug tags"
-  )
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
+exports.getBySlug = async (req, res, next) => {
+  try {
+    var data = await repository.getBySlug(req.params.slug);
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 };
 
 exports.getById = (req, res, next) => {
-  Product.findById(req.params.id)
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
+  try {
+    var data = repository.getById(req.params.id);
+    res.status(200).send(data);
+  } catch (x) {
+    res.status(500).send(x);
+  }
 };
 
-exports.getByTags = (req, res, next) => {
-  Product.find(
-    { tags: req.params.tags, active: true },
-    "title description price slug tags"
-  )
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(e => {
-      res.status(400).send(e);
-    });
+exports.getByTags = async (req, res, next) => {
+  try {
+    var data = await repository.getByTags(req);
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
-exports.put = (req, res, next) => {
-  Product.findByIdAndUpdate(req.params.id, {
-    $set: {
-      title: req.body.title,
-      description: req.body.description,
-      price: req.body.price
-    }
-  })
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(x => {
-      res.status(400).send(x);
-    });
+exports.put = async (req, res, next) => {
+  try {
+    var data = await repository.put(req.params.id, req.body);
+    res.status(200).send(data);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 };
 
-exports.delete = (req, res, next) => {
-  Product.findByIdAndDelete(req.params.id)
-    .then(x => {
-      res.status(200).send(x);
-    })
-    .catch(x => {
-      res.status(400).send(x);
-    });
+exports.delete = async (req, res, next) => {
+  try {
+    var data = await repository.delet(req.params.id)
+    res.status(400).send(data);
+  } catch (e) {
+    res.status(200).send(e);
+  }
 };
